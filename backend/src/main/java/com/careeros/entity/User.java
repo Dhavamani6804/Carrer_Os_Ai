@@ -5,55 +5,53 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.time.Instant;
+import java.util.List;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Document(collection = "users")
+@Data
+@Builder
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "users")
 public class User {
 
     @Id
     private String id;
 
-    @NotBlank(message = "First name is required")
+    // Authentication
     private String firstName;
-
-    @NotBlank(message = "Last name is required")
     private String lastName;
-
-    @Email(message = "Invalid email")
     private String email;
-
     private String password;
 
-    private String profilePicture;
-
+    // Profile
+    private String headline;
+    private String about;
     private String phone;
-
     private String location;
 
-    private String targetRole;
+    // Education
+    private String college;
+    private String degree;
+    private Integer graduationYear;
 
-    @Builder.Default
-    private Integer experience = 0;
+    // Social Links
+    private String github;
+    private String linkedin;
+    private String portfolio;
 
-    @Builder.Default
-    private List<String> skills = new ArrayList<>();
+    // Skills
+    private List<String> skills;
 
-    @Builder.Default
-    private Boolean verified = false;
+    // Profile Image
+    private String profileImage;
 
-    private String refreshToken;
-
-    @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    // Timestamps
+    private Instant createdAt;
+    private Instant updatedAt;
 }

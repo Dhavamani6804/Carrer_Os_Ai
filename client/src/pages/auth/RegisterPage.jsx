@@ -1,5 +1,5 @@
 import AuthLayout from "../../layouts/AuthLayout";
-import Card from "../../components/ui/Card";
+import Card, { CardBody, CardHeader } from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import Label from "../../components/ui/Label";
@@ -8,113 +8,95 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "../../utils/validationSchemas";
 import { registerUser } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function RegisterPage() {
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-} = useForm({
+  } = useForm({
     resolver: zodResolver(registerSchema),
-});
+  });
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const onSubmit = async (data) => {
+  const onSubmit = async (data) => {
     try {
+      const response = await registerUser(data);
 
-        const response = await registerUser(data);
+      console.log(response);
 
-        console.log(response);
+      toast.success("Registration Successful!");
 
-        alert("Registration Successful!");
-
-        navigate("/login");
-
+      navigate("/login");
     } catch (error) {
+      console.error(error);
 
-        console.error(error);
-
-        alert(
-            error.response?.data?.message ||
-            "Registration Failed"
-        );
+      toast.error(
+        "Registration Failed: " +
+          (error.response?.data?.message || "Please try again."),
+      );
     }
-};
+  };
 
-    return (
-        <AuthLayout>
-            <Card>
+  return (
+    <AuthLayout>
+      <Card>
+        <CardHeader>
+          <h2>Create Account</h2>
 
-                <h2 className="text-3xl font-bold text-center mb-2">
-                    Create Account
-                </h2>
+          <p>Start your CareerOS journey</p>
+        </CardHeader>
 
-                <p className="text-gray-500 text-center mb-8">
-                    Start your AI career journey
-                </p>
+        <CardBody>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Label htmlFor="firstName">First Name</Label>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              name="firstName"
+              placeholder="Dhava"
+              register={register}
+              error={errors.firstName}
+            />
 
-                    <Label htmlFor="firstName">
-                        First Name
-                    </Label>
+            <Label htmlFor="lastName">Last Name</Label>
 
-                    <Input
-                        name="firstName"
-                        placeholder="Dhava"
-                        register={register}
-                        error={errors.firstName}
-                    />
+            <Input
+              name="lastName"
+              placeholder="Mani"
+              register={register}
+              error={errors.lastName}
+            />
 
-                    <Label htmlFor="lastName">
-                        Last Name
-                    </Label>
+            <Label htmlFor="email">Email</Label>
 
-                    <Input
-                        name="lastName"
-                        placeholder="Mani"
-                        register={register}
-                        error={errors.lastName}
-                    />
+            <Input
+              type="email"
+              name="email"
+              placeholder="dhava@example.com"
+              register={register}
+              error={errors.email}
+            />
 
-                    <Label htmlFor="email">
-                        Email
-                    </Label>
+            <Label htmlFor="password">Password</Label>
 
-                    <Input
-                        type="email"
-                        name="email"
-                        placeholder="dhava@example.com"
-                        register={register}
-                        error={errors.email}
-                    />
+            <Input
+              type="password"
+              name="password"
+              placeholder="********"
+              register={register}
+              error={errors.password}
+            />
 
-                    <Label htmlFor="password">
-                        Password
-                    </Label>
-
-                    <Input
-                        type="password"
-                        name="password"
-                        placeholder="********"
-                        register={register}
-                        error={errors.password}
-                    />
-
-                    <Button
-                        type="submit"
-                        className="mt-2"
-                    >
-                        Create Account
-                    </Button>
-
-                </form>
-
-            </Card>
-        </AuthLayout>
-    );
+            <Button type="submit" className="mt-2">
+              Create Account
+            </Button>
+          </form>
+        </CardBody>
+      </Card>
+    </AuthLayout>
+  );
 }
 
 export default RegisterPage;
