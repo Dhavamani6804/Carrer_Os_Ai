@@ -7,11 +7,10 @@ const axiosClient = axios.create({
     },
 });
 
+// Request Interceptor
 axiosClient.interceptors.request.use((config) => {
 
     const token = localStorage.getItem("token");
-
-    console.log("JWT Token:", token);
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -19,5 +18,23 @@ axiosClient.interceptors.request.use((config) => {
 
     return config;
 });
+
+axiosClient.interceptors.response.use(
+
+    (response) => response,
+
+    (error) => {
+
+        if (error.response?.status === 401) {
+
+            localStorage.removeItem("token");
+
+            window.location.href = "/login";
+        }
+
+        return Promise.reject(error);
+    }
+
+);
 
 export default axiosClient;

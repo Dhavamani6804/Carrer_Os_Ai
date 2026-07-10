@@ -4,15 +4,15 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
-import { Toaster } from "sonner";
+import { Toaster } from "react-hot-toast";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <AuthProvider>
         <App />
         <Toaster
-            richColors
             position="top-right"
+            reverseOrder={false}
         />
     </AuthProvider>
 </BrowserRouter>

@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "../../utils/validationSchemas";
 import { registerUser } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import toast from "react-hot-toast";
 
 function RegisterPage() {
   const {

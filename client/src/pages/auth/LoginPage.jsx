@@ -9,6 +9,7 @@ import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import Label from "../../components/ui/Label";
 import { useAuth } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 
 function LoginPage() {
   const {
@@ -33,7 +34,7 @@ function LoginPage() {
     } catch (error) {
       console.error(error);
 
-      alert(error.response?.data?.message || "Login Failed");
+      toast.error(error.response?.data?.message || "Login Failed");
     }
   };
 
