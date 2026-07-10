@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import { getProfile, updateProfile } from "../../services/profileService";
+import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 function ProfilePage() {
   const [profile, setProfile] = useState({
@@ -20,6 +22,7 @@ function ProfilePage() {
   });
 
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -40,12 +43,33 @@ function ProfilePage() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    try {
-      await updateProfile(profile);
+    setSaving(true);
 
-      alert("Profile Updated Successfully");
+    try {
+      await updateProfile({
+        ...profile,
+
+        skills: Array.isArray(profile.skills)
+          ? profile.skills
+          : profile.skills
+              .split(",")
+              .map((skill) => skill.trim())
+              .filter(Boolean),
+      });
+
+      toast.success("Profile updated successfully");
     } catch (error) {
+      console.log(profile.skills);
+      console.log(typeof profile.skills);
+      console.log(Array.isArray(profile.skills));
       console.error(error);
+
+      console.log(error.response);
+
+      console.log(error.response?.data);
+      toast.error("Unable to update profile");
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -281,11 +305,15 @@ function ProfilePage() {
         />
 
         <div className="flex justify-end">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700 transition"
-          >
-            Save Changes
+          <button type="submit" disabled={saving} className="...">
+            {saving ? (
+              <>
+                <Loader2 className="animate-spin mr-2" size={18} />
+                Saving...
+              </>
+            ) : (
+              "Save Changes"
+            )}
           </button>
         </div>
       </form>
