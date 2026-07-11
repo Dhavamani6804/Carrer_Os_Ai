@@ -50,6 +50,8 @@ public class GeminiClient {
                             config
                     );
 
+            System.out.println(response.text());
+
             if (response == null || response.text() == null) {
                 return "Sorry, I couldn't generate a response.";
             }

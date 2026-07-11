@@ -5,6 +5,7 @@ import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import ProfilePage from "../pages/profile/ProfilePage";
 import ResumePage from "../pages/resume/ResumePage";
+import AIMentorPage from "../pages/ai/AIMentorPage";
 
 function AppRoutes() {
   return (
@@ -33,7 +34,20 @@ function AppRoutes() {
         }
       />
 
-      <Route path="/resume" element={<ResumePage />} />
+      <Route path="/resume" element={
+        <ProtectedRoute>
+          <ResumePage />
+        </ProtectedRoute>
+        } />
+
+      <Route
+        path="/mentor"
+        element={
+          <ProtectedRoute>
+            <AIMentorPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
