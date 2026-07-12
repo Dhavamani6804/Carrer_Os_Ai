@@ -7,6 +7,10 @@ import ProfilePage from "../pages/profile/ProfilePage";
 import ResumePage from "../pages/resume/ResumePage";
 import AIMentorPage from "../pages/ai/AIMentorPage";
 import JobsPage from "../pages/jobs/JobsPage";
+import CareerHubPage from "../pages/careerHub/CareerHubPage";
+import AddApplicationPage from "../pages/careerHub/AddApplicationPage";
+import ApplicationDetailsPage from "../pages/careerHub/ApplicationDetailsPage";
+
 
 function AppRoutes() {
   return (
@@ -35,11 +39,14 @@ function AppRoutes() {
         }
       />
 
-      <Route path="/resume" element={
-        <ProtectedRoute>
-          <ResumePage />
-        </ProtectedRoute>
-        } />
+      <Route
+        path="/resume"
+        element={
+          <ProtectedRoute>
+            <ResumePage />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/mentor"
@@ -58,6 +65,30 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/career-hub"
+        element={
+          <ProtectedRoute>
+            <CareerHubPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/career-hub/applications/:applicationId"
+        element={
+          <ProtectedRoute>
+            <ApplicationDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="/career-hub/new" element={
+        <ProtectedRoute>
+        <AddApplicationPage />
+        </ProtectedRoute>
+        } />
     </Routes>
   );
 }
