@@ -10,7 +10,7 @@ import JobsPage from "../pages/jobs/JobsPage";
 import CareerHubPage from "../pages/careerHub/CareerHubPage";
 import AddApplicationPage from "../pages/careerHub/AddApplicationPage";
 import ApplicationDetailsPage from "../pages/careerHub/ApplicationDetailsPage";
-
+import PreparationPage from "../pages/preparation/PreparationPage";
 
 function AppRoutes() {
   return (
@@ -57,14 +57,14 @@ function AppRoutes() {
         }
       />
 
-      <Route
+      {/* <Route
         path="/jobs"
         element={
           <ProtectedRoute>
             <JobsPage />
           </ProtectedRoute>
         }
-      />
+      /> */}
 
       <Route
         path="/career-hub"
@@ -89,6 +89,15 @@ function AppRoutes() {
         <AddApplicationPage />
         </ProtectedRoute>
         } />
+
+      <Route
+        path="/preparation/:applicationId"
+        element={
+          <ProtectedRoute>
+            <PreparationPage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

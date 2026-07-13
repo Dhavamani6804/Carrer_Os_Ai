@@ -33,11 +33,11 @@ const menu = [
     icon: BriefcaseBusiness,
     path: "/career-hub",
   },
-  {
-    title: "Jobs",
-    icon: Briefcase,
-    path: "/jobs",
-  },
+  // {
+  //   title: "Jobs",
+  //   icon: Briefcase,
+  //   path: "/jobs",
+  // },
   {
     title: "Profile",
     icon: User,

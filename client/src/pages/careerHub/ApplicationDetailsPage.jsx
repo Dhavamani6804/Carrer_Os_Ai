@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";import toast from "react-hot-toast";
 import DashboardLayout from "../../layouts/DashboardLayout";
 import { getApplicationById } from "../../services/careerHubService";
 import JobOverview from "../../components/careerHub/application/JobOverview";
@@ -12,6 +11,7 @@ import StatusSection from "../../components/careerHub/application/StatusSection"
 
 function ApplicationDetailsPage() {
   const { applicationId } = useParams();
+  const navigate = useNavigate();
 
   const [application, setApplication] = useState(null);
 
@@ -36,30 +36,6 @@ function ApplicationDetailsPage() {
       setLoading(false);
     }
   }
-
-  async function loadApplication() {
-
-  try {
-
-    setLoading(true);
-
-    const response = await getApplicationById(applicationId);
-
-    setApplication(response);
-
-  } catch (error) {
-
-    console.error(error);
-
-    toast.error("Unable to load application.");
-
-  } finally {
-
-    setLoading(false);
-
-  }
-
-}
 
   if (loading) {
     return (
@@ -103,26 +79,24 @@ function ApplicationDetailsPage() {
         </div>
 
         <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-6">
+          <div className="space-y-6">
+            <JobOverview application={application} />
 
-  <div className="space-y-6">
+            <StatusSection
+              applicationId={application.id}
+              currentStatus={application.status}
+              onUpdated={loadApplication}
+            />
+          </div>
 
-    <JobOverview
-      application={application}
-    />
-
-    <StatusSection
-      applicationId={application.id}
-      currentStatus={application.status}
-      onUpdated={loadApplication}
-    />
-
-  </div>
-
-  <NotesCard
-    notes={application.notes}
-  />
-
-</div>
+          <NotesCard notes={application.notes} />
+        </div>
+        <button
+          onClick={() => navigate(`/preparation/${application.id}`)}
+          className="rounded-xl bg-indigo-600 px-5 py-3 text-white hover:bg-indigo-700"
+        >
+          Prepare with AI
+        </button>
 
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-semibold">Timeline</h2>

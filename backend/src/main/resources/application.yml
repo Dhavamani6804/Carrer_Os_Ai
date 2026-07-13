@@ -17,4 +17,4 @@ gemini:
     key: ${GEMINI_API_KEY}
     model: gemini-3.5-flash
     temperature: 0.1
-    max-output-tokens: 2048
+    max-output-tokens: 4096
