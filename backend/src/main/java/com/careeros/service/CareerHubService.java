@@ -1,7 +1,6 @@
 package com.careeros.service;
 
-import com.careeros.dto.request.CreateJobApplicationRequest;
-import com.careeros.dto.request.UpdateApplicationStatusRequest;
+import com.careeros.dto.request.*;
 import com.careeros.dto.response.CareerHubStatsResponse;
 import com.careeros.dto.response.JobApplicationDetailsResponse;
 import com.careeros.dto.response.JobApplicationResponse;
@@ -23,6 +22,27 @@ public interface CareerHubService {
     JobApplicationDetailsResponse updateStatus(
             String applicationId,
             UpdateApplicationStatusRequest request
+    );
+
+    JobApplicationDetailsResponse updateNotes(
+            String applicationId,
+            UpdateNotesRequest request
+    );
+
+    JobApplicationDetailsResponse addTimelineEvent(
+            String applicationId,
+            AddTimelineEventRequest request
+    );
+
+    JobApplicationDetailsResponse updateTimelineEvent(
+            String applicationId,
+            String eventId,
+            UpdateTimelineEventRequest request
+    );
+
+    void deleteTimelineEvent(
+            String applicationId,
+            String eventId
     );
 
     void deleteApplication(

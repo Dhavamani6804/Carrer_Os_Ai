@@ -1,7 +1,11 @@
 import TimelineItem from "./TimelineItem";
 
-function Timeline({ items = [] }) {
-  if (items.length === 0) {
+function Timeline({
+  items = [],
+  onEdit,
+  onDelete,
+}) {
+  if (!items.length) {
     return (
       <p className="text-slate-500">
         No timeline events yet.
@@ -10,11 +14,13 @@ function Timeline({ items = [] }) {
   }
 
   return (
-    <div className="space-y-5">
-      {items.map((item, index) => (
+    <div className="space-y-4">
+      {items.map((item) => (
         <TimelineItem
-          key={index}
+          key={item.id}
           item={item}
+          onEdit={onEdit}
+          onDelete={onDelete}
         />
       ))}
     </div>

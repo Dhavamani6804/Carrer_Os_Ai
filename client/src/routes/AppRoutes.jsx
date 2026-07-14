@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
-import Dashboard from "../pages/dashboard/Dashboard";
+import Dashboard from "../pages/Dashboard/Dashboard";
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import ProfilePage from "../pages/profile/ProfilePage";
@@ -11,6 +11,7 @@ import CareerHubPage from "../pages/careerHub/CareerHubPage";
 import AddApplicationPage from "../pages/careerHub/AddApplicationPage";
 import ApplicationDetailsPage from "../pages/careerHub/ApplicationDetailsPage";
 import PreparationPage from "../pages/preparation/PreparationPage";
+import SettingsPage from "../pages/settings/SettingsPage";
 
 function AppRoutes() {
   return (
@@ -84,17 +85,28 @@ function AppRoutes() {
         }
       />
 
-      <Route path="/career-hub/new" element={
-        <ProtectedRoute>
-        <AddApplicationPage />
-        </ProtectedRoute>
-        } />
+      <Route
+        path="/career-hub/new"
+        element={
+          <ProtectedRoute>
+            <AddApplicationPage />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/preparation/:applicationId"
         element={
           <ProtectedRoute>
             <PreparationPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <SettingsPage />
           </ProtectedRoute>
         }
       />

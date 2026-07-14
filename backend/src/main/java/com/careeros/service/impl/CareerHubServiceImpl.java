@@ -14,6 +14,11 @@ import com.careeros.repository.JobApplicationRepository;
 import com.careeros.service.CareerHubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.careeros.security.CurrentUserService;
+import com.careeros.dto.request.AddTimelineEventRequest;
+import com.careeros.dto.request.UpdateNotesRequest;
+import com.careeros.dto.request.UpdateTimelineEventRequest;
+import java.util.UUID;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +31,7 @@ public class CareerHubServiceImpl implements CareerHubService {
     private final JobApplicationRepository repository;
 
     private final JobApplicationMapper mapper;
+    private final CurrentUserService currentUserService;
 
     @Override
     public JobApplicationDetailsResponse createApplication(
@@ -36,7 +42,7 @@ public class CareerHubServiceImpl implements CareerHubService {
 
             JobApplication application = JobApplication.builder()
 
-                    .userId("TEMP_USER")
+                    .userId(currentUserService.getCurrentUserId())
 
                     .role(request.getRole())
                     .company(request.getCompany())
@@ -76,7 +82,9 @@ public class CareerHubServiceImpl implements CareerHubService {
     @Override
     public List<JobApplicationResponse> getApplications() {
 
-        return repository.findAll()
+        String userId = currentUserService.getCurrentUserId();
+
+        return repository.findByUserId(userId)
                 .stream()
                 .map(mapper::toResponse)
                 .toList();
@@ -88,9 +96,15 @@ public class CareerHubServiceImpl implements CareerHubService {
             String applicationId
     ) {
 
-        JobApplication application = repository.findById(applicationId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Application not found."));
+        JobApplication application =
+                repository.findById(applicationId)
+                        .orElseThrow(() ->
+                                new ResourceNotFoundException("Application not found.")
+                        );
+
+        if (!application.getUserId().equals(currentUserService.getCurrentUserId())) {
+            throw new ResourceNotFoundException("Application not found.");
+        }
 
         return mapper.toDetailsResponse(application);
 
@@ -105,6 +119,9 @@ public class CareerHubServiceImpl implements CareerHubService {
         JobApplication application = repository.findById(applicationId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Application not found."));
+        if (!application.getUserId().equals(currentUserService.getCurrentUserId())) {
+            throw new ResourceNotFoundException("Application not found.");
+        }
 
         application.setStatus(request.getStatus());
 
@@ -144,15 +161,131 @@ public class CareerHubServiceImpl implements CareerHubService {
         JobApplication application = repository.findById(applicationId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Application not found."));
+        if (!application.getUserId().equals(currentUserService.getCurrentUserId())) {
+            throw new ResourceNotFoundException("Application not found.");
+        }
 
         repository.delete(application);
+
+    }
+
+    private JobApplication getOwnedApplication(String applicationId) {
+
+        JobApplication application = repository.findById(applicationId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Application not found."));
+
+        if (!application.getUserId().equals(currentUserService.getCurrentUserId())) {
+            throw new ResourceNotFoundException("Application not found.");
+        }
+
+        return application;
+    }
+
+    @Override
+    public JobApplicationDetailsResponse updateNotes(
+            String applicationId,
+            UpdateNotesRequest request
+    ) {
+
+        JobApplication application = getOwnedApplication(applicationId);
+
+        application.setNotes(request.getNotes());
+
+        application.setUpdatedAt(LocalDateTime.now());
+
+        repository.save(application);
+
+        return mapper.toDetailsResponse(application);
+
+    }
+
+    @Override
+    public JobApplicationDetailsResponse addTimelineEvent(
+            String applicationId,
+            AddTimelineEventRequest request
+    ) {
+
+        JobApplication application = getOwnedApplication(applicationId);
+
+        TimelineEvent event = TimelineEvent.builder()
+
+                .id(UUID.randomUUID().toString())
+
+                .title(request.getTitle())
+
+                .status(request.getStatus())
+
+                .note(request.getNote())
+
+                .timestamp(LocalDateTime.now())
+
+                .build();
+
+        application.getTimeline().add(event);
+
+        application.setUpdatedAt(LocalDateTime.now());
+
+        repository.save(application);
+
+        return mapper.toDetailsResponse(application);
+
+    }
+
+    @Override
+    public JobApplicationDetailsResponse updateTimelineEvent(
+            String applicationId,
+            String eventId,
+            UpdateTimelineEventRequest request
+    ) {
+
+        JobApplication application = getOwnedApplication(applicationId);
+
+        TimelineEvent event = application.getTimeline()
+
+                .stream()
+
+                .filter(e -> e.getId().equals(eventId))
+
+                .findFirst()
+
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Timeline event not found."));
+
+        event.setStatus(request.getStatus());
+
+        event.setNote(request.getNote());
+
+        application.setUpdatedAt(LocalDateTime.now());
+
+        repository.save(application);
+
+        return mapper.toDetailsResponse(application);
+
+    }
+
+    @Override
+    public void deleteTimelineEvent(
+            String applicationId,
+            String eventId
+    ) {
+
+        JobApplication application = getOwnedApplication(applicationId);
+
+        application.getTimeline()
+
+                .removeIf(event -> event.getId().equals(eventId));
+
+        application.setUpdatedAt(LocalDateTime.now());
+
+        repository.save(application);
 
     }
 
     @Override
     public CareerHubStatsResponse getStats() {
 
-        String userId = "TEMP_USER";
+        String userId = currentUserService.getCurrentUserId();
 
         return CareerHubStatsResponse.builder()
 

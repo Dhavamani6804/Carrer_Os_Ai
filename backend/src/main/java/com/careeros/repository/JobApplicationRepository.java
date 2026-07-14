@@ -9,6 +9,7 @@ import java.util.List;
 public interface JobApplicationRepository extends MongoRepository<JobApplication, String> {
 
     List<JobApplication> findByUserId(String userId);
+    void deleteAllByUserId(String userId);
 
     List<JobApplication> findByUserIdAndStatus(
             String userId,

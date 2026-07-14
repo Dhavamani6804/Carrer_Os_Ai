@@ -1,5 +1,6 @@
 package com.careeros.dto.response;
 
+import com.careeros.entity.TimelineEvent;
 import com.careeros.entity.enums.EmploymentType;
 import com.careeros.entity.enums.ExperienceLevel;
 import lombok.*;
@@ -39,5 +40,7 @@ public class JobDetailsResponse {
     private String applyUrl;
 
     private LocalDateTime postedDate;
+
+    private List<TimelineEvent> timeline;
 
 }

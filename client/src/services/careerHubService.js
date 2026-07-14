@@ -60,3 +60,46 @@ export const updateApplicationStatus = async (
 export const deleteApplication = async (applicationId) => {
   await axiosClient.delete(`/career-hub/${applicationId}`);
 };
+
+export const updateNotes = async (applicationId, notes) => {
+  const { data } = await axiosClient.patch(
+    `/career-hub/${applicationId}/notes`,
+    { notes }
+  );
+
+  return data;
+};
+
+export const addTimelineEvent = async (
+  applicationId,
+  payload
+) => {
+  const { data } = await axiosClient.post(
+    `/career-hub/${applicationId}/timeline`,
+    payload
+  );
+
+  return data;
+};
+
+export const updateTimelineEvent = async (
+  applicationId,
+  eventId,
+  payload
+) => {
+  const { data } = await axiosClient.put(
+    `/career-hub/${applicationId}/timeline/${eventId}`,
+    payload
+  );
+
+  return data;
+};
+
+export const deleteTimelineEvent = async (
+  applicationId,
+  eventId
+) => {
+  await axiosClient.delete(
+    `/career-hub/${applicationId}/timeline/${eventId}`
+  );
+};

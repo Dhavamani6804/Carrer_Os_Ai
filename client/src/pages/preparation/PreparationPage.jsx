@@ -88,12 +88,12 @@ function PreparationPage() {
 
         <PreparationOverview overview={plan.overview} />
 
-        {/* <DailyProgressCard
+         <DailyProgressCard
           progress={progress}
           totalTechnical={plan.technicalTopics?.length || 0}
           totalCoding={plan.codingTopics?.length || 0}
           totalRoadmap={plan.preparationRoadmap?.length || 0}
-        /> */}
+        /> 
 
         <div className="grid gap-6 lg:grid-cols-2">
           <TechnicalTopicsCard

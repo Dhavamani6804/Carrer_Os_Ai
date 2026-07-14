@@ -1,6 +1,7 @@
 
 package com.careeros.dto.response;
 
+import com.careeros.entity.TimelineEvent;
 import com.careeros.entity.enums.*;
 import lombok.*;
 
@@ -53,5 +54,7 @@ public class JobApplicationDetailsResponse {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    private List<TimelineEvent> timeline;
 
 }

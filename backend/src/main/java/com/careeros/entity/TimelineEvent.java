@@ -4,6 +4,7 @@ import com.careeros.entity.enums.ApplicationStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,10 +13,44 @@ import java.time.LocalDateTime;
 @Builder
 public class TimelineEvent {
 
+    /**
+     * Unique Timeline Event ID
+     */
+    @Builder.Default
+    private String id = UUID.randomUUID().toString();
+
+    /**
+     * Related Application Status
+     */
     private ApplicationStatus status;
 
+    /**
+     * Short title shown in timeline
+     * Example:
+     * Recruiter Call
+     * OA Completed
+     * Interview Scheduled
+     * Offer Received
+     */
+    private String title;
+
+    /**
+     * Detailed description / notes
+     */
     private String note;
 
-    private LocalDateTime timestamp;
+    /**
+     * Event Type
+     * AUTO   -> generated automatically by CareerOS
+     * MANUAL -> added by the user
+     */
+    @Builder.Default
+    private String type = "MANUAL";
+
+    /**
+     * Event creation time
+     */
+    @Builder.Default
+    private LocalDateTime timestamp = LocalDateTime.now();
 
 }

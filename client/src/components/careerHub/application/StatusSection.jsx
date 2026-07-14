@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { APPLICATION_STATUSES } from "../../../constants/applicationStatuses";
 import { updateApplicationStatus } from "../../../services/careerHubService";
@@ -7,6 +7,10 @@ function StatusSection({ applicationId, currentStatus, onUpdated }) {
   const [status, setStatus] = useState(currentStatus || "WISHLIST");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setStatus(currentStatus || "WISHLIST");
+  }, [currentStatus]);
 
   async function handleUpdate() {
     try {
@@ -26,7 +30,12 @@ function StatusSection({ applicationId, currentStatus, onUpdated }) {
       }
     } catch (error) {
       console.error(error);
-      toast.error("Unable to update status.");
+
+      console.log(error.response);
+
+      console.log(error.response?.data);
+
+      toast.error(error.response?.data?.message || "Unable to update status.");
     } finally {
       setLoading(false);
     }

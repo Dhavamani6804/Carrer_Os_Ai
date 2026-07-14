@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface ResumeRepository extends MongoRepository<Resume, String> {
 
+    void deleteByUserId(String userId);
     Optional<Resume> findByUserId(String userId);
 
 }

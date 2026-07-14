@@ -54,4 +54,78 @@ public class User {
     // Timestamps
     private Instant createdAt;
     private Instant updatedAt;
+
+    /*
+     * Career Preferences
+     */
+
+    @Builder.Default
+    private String preferredRole = "";
+
+    @Builder.Default
+    private String preferredLocation = "";
+
+    @Builder.Default
+    private String expectedSalary = "";
+
+    @Builder.Default
+    private String workMode = "";
+
+    @Builder.Default
+    private String employmentType = "";
+
+    @Builder.Default
+    private List<String> preferredSkills = new ArrayList<>();
+
+    @Builder.Default
+    private Integer dailyStudyGoal = 2;
+
+    /*
+     * AI Preferences
+     */
+
+    @Builder.Default
+    private String mentorLevel = "INTERMEDIATE";
+
+    @Builder.Default
+    private String answerLength = "DETAILED";
+
+    @Builder.Default
+    private Boolean autoGeneratePreparation = true;
+
+    @Builder.Default
+    private Boolean personalizedRecommendations = true;
+
+    /*
+     * Notifications
+     */
+
+    @Builder.Default
+    private Boolean emailNotifications = true;
+
+    @Builder.Default
+    private Boolean interviewReminders = true;
+
+    @Builder.Default
+    private Boolean applicationReminders = true;
+
+    @Builder.Default
+    private Boolean preparationReminders = true;
+
+    @Builder.Default
+    private Boolean weeklyReport = true;
+
+    /*
+     * Appearance
+     */
+
+    @Builder.Default
+    private String theme = "SYSTEM";
+
+    /*
+     * Privacy
+     */
+
+    @Builder.Default
+    private Boolean profileVisible = true;
 }

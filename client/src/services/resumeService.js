@@ -27,9 +27,8 @@ export const getResume = async () => {
 };
 
 export const downloadResume = () => {
-
     window.open(
-        "http://localhost:8080/api/v1/resume/download",
+        `${axiosClient.defaults.baseURL}/resume/download`,
         "_blank"
     );
 

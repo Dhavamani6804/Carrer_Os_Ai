@@ -10,6 +10,7 @@ import Input from "../../components/ui/Input";
 import Label from "../../components/ui/Label";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
   const {
@@ -71,9 +72,14 @@ function LoginPage() {
               Login
             </Button>
 
-            <p className="text-center mt-6 text-sm">
+            <p className="mt-6 text-center text-sm">
               Don't have an account?{" "}
-              <span className="text-blue-600 cursor-pointer">Register</span>
+              <Link
+                to="/register"
+                className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+              >
+                Register
+              </Link>
             </p>
           </form>
         </CardBody>

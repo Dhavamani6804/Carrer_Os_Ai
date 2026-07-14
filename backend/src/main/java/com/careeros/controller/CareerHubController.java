@@ -13,6 +13,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.careeros.dto.request.AddTimelineEventRequest;
+import com.careeros.dto.request.UpdateNotesRequest;
+import com.careeros.dto.request.UpdateTimelineEventRequest;
 
 import java.util.List;
 
@@ -75,6 +78,68 @@ public class CareerHubController {
         return ResponseEntity.ok(
                 careerHubService.updateStatus(applicationId, request)
         );
+
+    }
+
+    @PatchMapping("/{applicationId}/notes")
+    public ResponseEntity<JobApplicationDetailsResponse> updateNotes(
+            @PathVariable String applicationId,
+            @RequestBody UpdateNotesRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                careerHubService.updateNotes(
+                        applicationId,
+                        request
+                )
+        );
+
+    }
+
+    @PostMapping("/{applicationId}/timeline")
+    public ResponseEntity<JobApplicationDetailsResponse> addTimelineEvent(
+            @PathVariable String applicationId,
+            @RequestBody AddTimelineEventRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                careerHubService.addTimelineEvent(
+                        applicationId,
+                        request
+                )
+        );
+
+    }
+
+    @PutMapping("/{applicationId}/timeline/{eventId}")
+    public ResponseEntity<JobApplicationDetailsResponse> updateTimelineEvent(
+            @PathVariable String applicationId,
+            @PathVariable String eventId,
+            @RequestBody UpdateTimelineEventRequest request
+    ) {
+
+        return ResponseEntity.ok(
+                careerHubService.updateTimelineEvent(
+                        applicationId,
+                        eventId,
+                        request
+                )
+        );
+
+    }
+
+    @DeleteMapping("/{applicationId}/timeline/{eventId}")
+    public ResponseEntity<Void> deleteTimelineEvent(
+            @PathVariable String applicationId,
+            @PathVariable String eventId
+    ) {
+
+        careerHubService.deleteTimelineEvent(
+                applicationId,
+                eventId
+        );
+
+        return ResponseEntity.noContent().build();
 
     }
 

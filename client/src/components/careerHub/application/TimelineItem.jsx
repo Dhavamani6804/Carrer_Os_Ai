@@ -1,34 +1,61 @@
+import { Pencil, Trash2 } from "lucide-react";
 import { APPLICATION_STATUSES } from "../../../constants/applicationStatuses";
 
-function TimelineItem({ item }) {
+function TimelineItem({
+  item,
+  onEdit,
+  onDelete,
+}) {
+  if (!item) return null;
 
-  const currentStatus =
-    APPLICATION_STATUSES.find(
-      (status) => status.value === item.status
-    );
+  const currentStatus = APPLICATION_STATUSES.find(
+    (status) => status.value === item.status
+  );
 
   return (
-    <div className="relative pl-8">
+    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 
-      <span
-        className="absolute left-0 top-2 h-3 w-3 rounded-full bg-blue-600"
-      />
+      <div className="flex items-start justify-between">
 
-      <h4 className="font-semibold text-slate-900">
-        {currentStatus?.label || item.status}
-      </h4>
+        <div className="flex-1">
 
-      <p className="text-sm text-slate-500">
-        {item.timestamp
-          ? new Date(item.timestamp).toLocaleString()
-          : ""}
-      </p>
+          <h3 className="font-semibold text-slate-900">
+            {item.title || currentStatus?.label || item.status}
+          </h3>
 
-      {item.note && (
-        <p className="mt-2 text-sm text-slate-700">
-          {item.note}
-        </p>
-      )}
+          <p className="mt-1 text-sm text-slate-500">
+            {item.timestamp
+              ? new Date(item.timestamp).toLocaleString()
+              : ""}
+          </p>
+
+          {item.note && (
+            <p className="mt-3 text-slate-700">
+              {item.note}
+            </p>
+          )}
+
+        </div>
+
+        <div className="flex gap-2">
+
+          <button
+            onClick={() => onEdit?.(item)}
+            className="rounded-lg border p-2 hover:bg-slate-100"
+          >
+            <Pencil size={18} />
+          </button>
+
+          <button
+            onClick={() => onDelete?.(item)}
+            className="rounded-lg border border-red-300 p-2 text-red-600 hover:bg-red-50"
+          >
+            <Trash2 size={18} />
+          </button>
+
+        </div>
+
+      </div>
 
     </div>
   );

@@ -47,6 +47,7 @@ public class JobApplicationMapper {
                 .appliedDate(application.getAppliedDate())
                 .createdAt(application.getCreatedAt())
                 .updatedAt(application.getUpdatedAt())
+                .timeline(application.getTimeline())
                 .build();
     }
 
