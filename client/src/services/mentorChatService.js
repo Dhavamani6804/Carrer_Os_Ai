@@ -1,4 +1,3 @@
-
 import axiosClient from "../api/axiosClient";
 
 export async function sendMessage(sessionId, message) {
@@ -13,4 +12,12 @@ export async function sendMessage(sessionId, message) {
 
     return response.data;
 
+}
+    export async function getMessages(sessionId) {
+
+    const response = await axiosClient.get(
+        `/preparation/chat/${sessionId}`
+    );
+
+    return response.data;
 }

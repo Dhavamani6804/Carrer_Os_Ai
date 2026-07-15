@@ -26,7 +26,10 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         } catch (IOException e) {
 
-            throw new RuntimeException("Could not create upload directory", e);
+            throw new RuntimeException(
+                    "Could not create upload directory",
+                    e
+            );
 
         }
 
@@ -40,11 +43,15 @@ public class FileStorageServiceImpl implements FileStorageService {
         System.out.println("Empty: " + file.isEmpty());
 
         if (file.isEmpty()) {
-            throw new BadRequestException("Please select a file.");
+            throw new BadRequestException(
+                    "Please select a file."
+            );
         }
 
         if (!"application/pdf".equals(file.getContentType())) {
-            throw new BadRequestException("Only PDF files are allowed.");
+            throw new BadRequestException(
+                    "Only PDF files are allowed."
+            );
         }
 
         String uniqueFileName =
@@ -59,10 +66,16 @@ public class FileStorageServiceImpl implements FileStorageService {
             );
 
         } catch (IOException e) {
-            throw new RuntimeException("Unable to store file.");
+
+            throw new RuntimeException(
+                    "Unable to store file.",
+                    e
+            );
+
         }
 
         return uniqueFileName;
+
     }
 
     @Override
@@ -72,17 +85,23 @@ public class FileStorageServiceImpl implements FileStorageService {
 
             Path file = uploadPath.resolve(fileName);
 
-            Resource resource = new UrlResource(file.toUri());
+            Resource resource =
+                    new UrlResource(file.toUri());
 
             if (resource.exists()) {
                 return resource;
             }
 
-            throw new RuntimeException("File not found.");
+            throw new RuntimeException(
+                    "File not found."
+            );
 
         } catch (MalformedURLException e) {
 
-            throw new RuntimeException("Invalid file.");
+            throw new RuntimeException(
+                    "Invalid file.",
+                    e
+            );
 
         }
 
@@ -93,13 +112,29 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         try {
 
-            Files.deleteIfExists(uploadPath.resolve(fileName));
+            Files.deleteIfExists(
+                    uploadPath.resolve(fileName)
+            );
 
         } catch (IOException e) {
 
-            throw new RuntimeException("Unable to delete file.");
+            throw new RuntimeException(
+                    "Unable to delete file.",
+                    e
+            );
 
         }
+
+    }
+
+    /**
+     * Returns the absolute path of the stored file.
+     * Used by Resume Tailoring to extract PDF text.
+     */
+    @Override
+    public Path getFilePath(String fileName) {
+
+        return uploadPath.resolve(fileName);
 
     }
 

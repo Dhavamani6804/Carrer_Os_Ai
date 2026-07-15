@@ -84,4 +84,6 @@ public class MentorSession {
     @Builder.Default
     private Boolean archived = false;
 
+    private String preparationContext;
+
 }

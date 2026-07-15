@@ -14,13 +14,13 @@ function TimelineCard({ onAdd }) {
         </p>
       </div>
 
-      <button
+      {/* <button
         onClick={onAdd}
         className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-medium text-white transition hover:bg-blue-700"
       >
         <Plus size={18} />
         Add Event
-      </button>
+      </button> */}
 
     </div>
   );

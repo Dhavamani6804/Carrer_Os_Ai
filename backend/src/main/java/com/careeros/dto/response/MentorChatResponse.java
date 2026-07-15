@@ -1,4 +1,3 @@
-
 package com.careeros.dto.response;
 
 import lombok.*;
@@ -11,5 +10,8 @@ import lombok.*;
 public class MentorChatResponse {
 
     private String answer;
+
+    @Builder.Default
+    private boolean aiAvailable = true;
 
 }

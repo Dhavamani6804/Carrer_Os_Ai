@@ -8,9 +8,7 @@ function CodingTopicsCard({
 }) {
   return (
     <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold">
-        Coding Topics
-      </h2>
+      <h2 className="text-xl font-semibold">Coding Topics</h2>
 
       <div className="mt-6 space-y-3">
         {topics.map((topic) => {
@@ -19,7 +17,6 @@ function CodingTopicsCard({
           return (
             <button
               key={topic}
-              disabled={done}
               onClick={() =>
                 onComplete({
                   sessionId,
@@ -28,26 +25,16 @@ function CodingTopicsCard({
                 })
               }
               className={`flex w-full items-center gap-3 rounded-xl border p-3 transition
-              ${
-                done
-                  ? "border-green-500 bg-green-50"
-                  : "hover:bg-green-50"
-              }`}
+    ${done ? "border-green-500 bg-green-50" : "hover:bg-green-50"}`}
             >
               <CheckCircle2
                 size={20}
-                className={
-                  done
-                    ? "text-green-600"
-                    : "text-slate-400"
-                }
+                className={done ? "text-green-600" : "text-slate-400"}
               />
 
               <span
                 className={
-                  done
-                    ? "font-medium text-green-700"
-                    : "text-slate-700"
+                  done ? "font-medium text-green-700" : "text-slate-700"
                 }
               >
                 {topic}

@@ -1,4 +1,3 @@
-
 package com.careeros.ai;
 
 import com.careeros.entity.JobApplication;
@@ -12,35 +11,210 @@ public class PreparationPromptBuilder {
         return """
 You are CareerOS AI Mentor.
 
-Your task is to create a complete interview preparation roadmap.
+You are an experienced Senior Software Engineer, Technical Interviewer,
+Hiring Manager and Career Mentor.
 
-The roadmap should be personalized for this job.
+Your responsibility is to prepare a candidate specifically for the job
+they are applying for.
 
-Job Role:
+=========================
+JOB INFORMATION
+=========================
+
+Role:
 %s
 
 Company:
 %s
 
-Job Description:
+Location:
 %s
 
-Skills:
+Employment Type:
 %s
 
-Requirements:
+Experience Level:
 %s
 
-Responsibilities:
+Salary:
 %s
+
+=========================
+JOB DESCRIPTION
+=========================
+
+%s
+
+=========================
+REQUIRED SKILLS
+=========================
+
+%s
+
+=========================
+JOB REQUIREMENTS
+=========================
+
+%s
+
+=========================
+RESPONSIBILITIES
+=========================
+
+%s
+
+=========================
+INSTRUCTIONS
+=========================
+
+Analyze the company, role and job description.
+
+Personalize the preparation for THIS company.
+
+If the company has a known interview style,
+adapt the roadmap accordingly.
+
+Examples:
+
+Amazon
+- Leadership Principles
+- DSA
+- Low Level Design
+
+Google
+- DSA
+- Problem Solving
+- System Design
+
+Microsoft
+- Coding
+- CS Fundamentals
+- Behavioural
+
+Startups
+- Practical Development
+- MERN
+- Projects
+- APIs
+- Debugging
+
+The preparation plan must prioritize
+the skills actually required by this job.
+
+Do NOT generate generic interview advice.
+
+=========================
+TECHNICAL TOPICS
+=========================
+
+Return 10-20 important technical topics.
+
+Order them from highest priority to lowest priority.
+
+=========================
+CODING TOPICS
+=========================
+
+Return only coding topics relevant to this role.
+
+Examples:
+
+Arrays
+
+Trees
+
+Graphs
+
+Recursion
+
+Dynamic Programming
+
+Java Collections
+
+Java Streams
+
+React State
+
+Node.js APIs
+
+MongoDB Aggregation
+
+=========================
+INTERVIEW QUESTIONS
+=========================
+
+Generate realistic technical interview questions
+that this company may ask.
+
+=========================
+BEHAVIOURAL QUESTIONS
+=========================
+
+Generate company specific behavioural questions.
+
+=========================
+PROJECT SUGGESTIONS
+=========================
+
+Suggest resume-worthy projects
+that increase the candidate's chances.
+
+Projects should closely match this job.
+
+=========================
+ROADMAP
+=========================
+
+Create a preparation roadmap.
+
+The roadmap should be sequential.
+
+Example:
+
+Understand company
+
+Revise JavaScript
+
+Revise React
+
+Practice Node APIs
+
+Practice MongoDB
+
+Solve DSA
+
+Mock Interview
+
+=========================
+STRENGTHS
+=========================
+
+Identify strengths the candidate may already have
+based on the job description.
+
+=========================
+WEAKNESSES
+=========================
+
+Identify skills likely missing or needing improvement.
+
+=========================
+FINAL ADVICE
+=========================
+
+Give concise actionable advice specifically for this company and role.
+
+=========================
+IMPORTANT
+=========================
 
 Return ONLY valid JSON.
 
-Do not explain.
+Do NOT include markdown.
 
-Do not use markdown.
+Do NOT include explanations.
 
-Do not wrap inside ```json.
+Do NOT wrap inside ```json.
 
 Schema:
 
@@ -56,18 +230,19 @@ Schema:
   "weaknesses":[],
   "finalAdvice":""
 }
-
-""".formatted(
-
-                application.getRole(),
-                application.getCompany(),
-                application.getJobDescription(),
-                application.getSkills(),
-                application.getRequirements(),
-                application.getResponsibilities()
-
-        );
+"""
+                .formatted(
+                        application.getRole(),
+                        application.getCompany(),
+                        application.getLocation(),
+                        application.getEmploymentType(),
+                        application.getExperienceLevel(),
+                        application.getSalary(),
+                        application.getJobDescription(),
+                        application.getSkills(),
+                        application.getRequirements(),
+                        application.getResponsibilities()
+                );
 
     }
-
 }

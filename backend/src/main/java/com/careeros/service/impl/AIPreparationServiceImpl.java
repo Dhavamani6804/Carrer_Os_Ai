@@ -90,6 +90,31 @@ public class AIPreparationServiceImpl
          * Save Mentor Session
          */
 
+        String preparationContext = """
+                Candidate is preparing for:
+                
+                Role: %s
+                Company: %s
+                
+                Required Skills:
+                %s
+                
+                Requirements:
+                %s
+                
+                Responsibilities:
+                %s
+                
+                Focus the mentor on this company and role.
+                """
+                .formatted(
+                        application.getRole(),
+                        application.getCompany(),
+                        application.getSkills(),
+                        application.getRequirements(),
+                        application.getResponsibilities()
+                );
+
         MentorSession session = MentorSession.builder()
 
                 .userId(application.getUserId())
@@ -123,6 +148,8 @@ public class AIPreparationServiceImpl
                 .createdAt(LocalDateTime.now())
 
                 .updatedAt(LocalDateTime.now())
+
+                .preparationContext(preparationContext)
 
                 .build();
 

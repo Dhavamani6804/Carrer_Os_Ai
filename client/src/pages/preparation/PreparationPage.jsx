@@ -1,10 +1,7 @@
 import { useParams } from "react-router-dom";
-
 import DashboardLayout from "../../layouts/DashboardLayout";
-
 import usePreparation from "../../hooks/usePreparation";
 import useProgress from "../../hooks/useProgress";
-
 import MentorHeader from "../../components/preparation/MentorHeader";
 import PreparationOverview from "../../components/preparation/PreparationOverview";
 import TechnicalTopicsCard from "../../components/preparation/TechnicalTopicsCard";

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import com.careeros.dto.request.AddTimelineEventRequest;
 import com.careeros.dto.request.UpdateNotesRequest;
 import com.careeros.dto.request.UpdateTimelineEventRequest;
+import com.careeros.dto.response.ResumeTailorResponse;
+import com.careeros.service.ResumeTailorService;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class CareerHubController {
 
     private final CareerHubService careerHubService;
     private final AIAnalyzerService aiAnalyzerService;
+    private final ResumeTailorService resumeTailorService;
 
     @PostMapping("/analyze")
     public ResponseEntity<JobDescriptionAnalysisResponse> analyzeJobDescription(
@@ -161,5 +164,14 @@ public class CareerHubController {
         );
 
     }
+    @PostMapping("/{applicationId}/tailor-resume")
+    public ResponseEntity<ResumeTailorResponse> tailorResume(
+            @PathVariable String applicationId
+    ) {
 
+        return ResponseEntity.ok(
+                resumeTailorService.tailorResume(applicationId)
+        );
+
+    }
 }
