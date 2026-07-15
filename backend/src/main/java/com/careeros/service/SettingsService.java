@@ -16,4 +16,6 @@ public interface SettingsService {
             ChangePasswordRequest request
     );
 
+    void deleteAccount(String password);
+
 }

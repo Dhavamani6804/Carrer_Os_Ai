@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
+import { useTheme } from "../context/ThemeContext";
 import {
   getSettings,
   updateSettings,
@@ -13,6 +13,8 @@ function useSettings() {
 
   const [saving, setSaving] = useState(false);
 
+  const { setTheme } = useTheme();
+
   async function loadSettings() {
     try {
       setLoading(true);
@@ -20,6 +22,35 @@ function useSettings() {
       const data = await getSettings();
 
       setSettings(data);
+      switch (data.theme) {
+
+        case "DARK":
+
+          setTheme("dark");
+
+          break;
+
+        case "LIGHT":
+
+          setTheme("light");
+
+          break;
+
+        default: {
+
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+
+          setTheme(
+            prefersDark
+              ? "dark"
+              : "light"
+          );
+
+        }
+
+      }
     } catch (error) {
       console.error(error);
 

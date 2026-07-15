@@ -20,3 +20,11 @@ export const changePassword = async (data) => {
     data
   );
 };
+
+export const deleteAccount = async ({ password }) => {
+  await axiosClient.delete("/settings", {
+    params: {
+      password,
+    },
+  });
+};

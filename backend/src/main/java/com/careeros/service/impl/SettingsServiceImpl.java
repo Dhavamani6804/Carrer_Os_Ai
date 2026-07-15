@@ -6,7 +6,7 @@ import com.careeros.dto.response.SettingsResponse;
 import com.careeros.entity.User;
 import com.careeros.exception.BadRequestException;
 import com.careeros.exception.ResourceNotFoundException;
-import com.careeros.repository.UserRepository;
+import com.careeros.repository.*;
 import com.careeros.service.SettingsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +20,16 @@ public class SettingsServiceImpl implements SettingsService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final ResumeRepository resumeRepository;
+
+    private final JobApplicationRepository jobApplicationRepository;
+
+    private final MentorSessionRepository mentorSessionRepository;
+
+    private final MentorProgressRepository mentorProgressRepository;
+
+    private final GeneralMentorSessionRepository generalMentorSessionRepository;
 
     private User getCurrentUser() {
 
@@ -40,32 +50,11 @@ public class SettingsServiceImpl implements SettingsService {
         User user = getCurrentUser();
 
         return SettingsResponse.builder()
-
-                .preferredRole(user.getPreferredRole())
-                .preferredLocation(user.getPreferredLocation())
-                .expectedSalary(user.getExpectedSalary())
-                .workMode(user.getWorkMode())
-                .employmentType(user.getEmploymentType())
-                .preferredSkills(user.getPreferredSkills())
-                .dailyStudyGoal(user.getDailyStudyGoal())
-
-                .mentorLevel(user.getMentorLevel())
-                .answerLength(user.getAnswerLength())
-                .autoGeneratePreparation(user.getAutoGeneratePreparation())
-                .personalizedRecommendations(user.getPersonalizedRecommendations())
-
-                .emailNotifications(user.getEmailNotifications())
-                .interviewReminders(user.getInterviewReminders())
-                .applicationReminders(user.getApplicationReminders())
-                .preparationReminders(user.getPreparationReminders())
-                .weeklyReport(user.getWeeklyReport())
-
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
                 .theme(user.getTheme())
-
-                .profileVisible(user.getProfileVisible())
-
                 .build();
-
     }
 
     @Override
@@ -75,54 +64,15 @@ public class SettingsServiceImpl implements SettingsService {
 
         User user = getCurrentUser();
 
-        user.setPreferredRole(request.getPreferredRole());
+        user.setFirstName(request.getFirstName());
 
-        user.setPreferredLocation(request.getPreferredLocation());
-
-        user.setExpectedSalary(request.getExpectedSalary());
-
-        user.setWorkMode(request.getWorkMode());
-
-        user.setEmploymentType(request.getEmploymentType());
-
-        user.setPreferredSkills(request.getPreferredSkills());
-
-        user.setDailyStudyGoal(request.getDailyStudyGoal());
-
-        user.setMentorLevel(request.getMentorLevel());
-
-        user.setAnswerLength(request.getAnswerLength());
-
-        user.setAutoGeneratePreparation(
-                request.getAutoGeneratePreparation());
-
-        user.setPersonalizedRecommendations(
-                request.getPersonalizedRecommendations());
-
-        user.setEmailNotifications(
-                request.getEmailNotifications());
-
-        user.setInterviewReminders(
-                request.getInterviewReminders());
-
-        user.setApplicationReminders(
-                request.getApplicationReminders());
-
-        user.setPreparationReminders(
-                request.getPreparationReminders());
-
-        user.setWeeklyReport(
-                request.getWeeklyReport());
+        user.setLastName(request.getLastName());
 
         user.setTheme(request.getTheme());
-
-        user.setProfileVisible(
-                request.getProfileVisible());
 
         userRepository.save(user);
 
         return getSettings();
-
     }
 
     @Override
@@ -145,6 +95,49 @@ public class SettingsServiceImpl implements SettingsService {
                         request.getNewPassword()));
 
         userRepository.save(user);
+
+    }
+
+    @Override
+    public void deleteAccount(String password) {
+
+        User user = getCurrentUser();
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+
+            throw new BadRequestException(
+                    "Incorrect password."
+            );
+
+        }
+
+        /*
+         * Delete Resume
+         */
+        resumeRepository.findByUserId(user.getId())
+                .ifPresent(resumeRepository::delete);
+
+        /*
+         * Delete Career Hub
+         */
+        jobApplicationRepository.deleteAllByUserId(user.getId());
+
+        /*
+         * Delete AI Preparation
+         */
+        mentorSessionRepository.deleteAllByUserId(user.getId());
+
+        mentorProgressRepository.deleteAllByUserId(user.getId());
+
+        /*
+         * Delete General Mentor
+         */
+        generalMentorSessionRepository.deleteAllByUserId(user.getId());
+
+        /*
+         * Finally delete user
+         */
+        userRepository.delete(user);
 
     }
 }

@@ -46,4 +46,15 @@ public class SettingsController {
 
     }
 
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAccount(
+            @RequestParam String password
+    ) {
+
+        settingsService.deleteAccount(password);
+
+        return ResponseEntity.noContent().build();
+
+    }
+
 }

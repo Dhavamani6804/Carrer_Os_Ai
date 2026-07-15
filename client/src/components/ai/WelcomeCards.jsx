@@ -1,42 +1,86 @@
 import {
-  BookOpen,
+  Code2,
+  Database,
   Brain,
+  Calculator,
   Briefcase,
+  Users,
   Rocket,
+  MonitorSmartphone,
+  Boxes,
+  Workflow,
 } from "lucide-react";
 
-const suggestions = [
+const categories = [
   {
-    title: "Spring Boot Roadmap",
-    description: "Create a roadmap to master Spring Boot.",
-    prompt:
-      "Create a complete roadmap to become proficient in Spring Boot.",
-    icon: Rocket,
-    color: "bg-blue-100 text-blue-600",
+    title: "Java",
+    description: "Core Java, OOP, Collections, Multithreading",
+    category: "Java",
+    icon: Code2,
+    color: "bg-red-100 text-red-600",
   },
   {
-    title: "Resume Review",
-    description: "Improve your software developer resume.",
-    prompt:
-      "Review my resume and suggest improvements for software engineering jobs.",
-    icon: Briefcase,
+    title: "Spring Boot",
+    description: "Spring, REST APIs, Security, JPA",
+    category: "Spring Boot",
+    icon: Rocket,
     color: "bg-green-100 text-green-600",
   },
   {
-    title: "DSA Interview",
-    description: "Prepare for coding interviews.",
-    prompt:
-      "Give me a 30-day DSA interview preparation roadmap.",
+    title: "DSA",
+    description: "Coding interview preparation",
+    category: "DSA",
     icon: Brain,
     color: "bg-purple-100 text-purple-600",
   },
   {
-    title: "SQL Preparation",
-    description: "Master SQL interview questions.",
-    prompt:
-      "Teach me SQL from beginner to interview level.",
-    icon: BookOpen,
+    title: "SQL",
+    description: "Queries, Joins, Indexes",
+    category: "SQL",
+    icon: Database,
     color: "bg-orange-100 text-orange-600",
+  },
+  {
+    title: "React",
+    description: "Hooks, State, Routing",
+    category: "React",
+    icon: MonitorSmartphone,
+    color: "bg-cyan-100 text-cyan-600",
+  },
+  {
+    title: "Node.js",
+    description: "Express, JWT, REST APIs",
+    category: "Node.js",
+    icon: Boxes,
+    color: "bg-lime-100 text-lime-600",
+  },
+  {
+    title: "Aptitude",
+    description: "Quantitative, Logical & Verbal",
+    category: "Aptitude",
+    icon: Calculator,
+    color: "bg-yellow-100 text-yellow-700",
+  },
+  {
+    title: "HR Interview",
+    description: "HR & Behavioral Questions",
+    category: "HR",
+    icon: Users,
+    color: "bg-pink-100 text-pink-600",
+  },
+  {
+    title: "System Design",
+    description: "LLD & HLD Basics",
+    category: "System Design",
+    icon: Workflow,
+    color: "bg-indigo-100 text-indigo-600",
+  },
+  {
+    title: "Resume Guidance",
+    description: "Resume & Career Advice",
+    category: "Resume",
+    icon: Briefcase,
+    color: "bg-blue-100 text-blue-600",
   },
 ];
 
@@ -44,26 +88,26 @@ function WelcomeCards({ onSelect }) {
   return (
     <div className="mt-10">
 
-      <h2 className="text-2xl font-semibold text-gray-800">
-        👋 Welcome to CareerOS AI Mentor
+      <h2 className="text-3xl font-bold text-slate-800">
+        Choose your learning track
       </h2>
 
-      <p className="text-gray-500 mt-2">
-        Choose a topic below or ask your own question.
+      <p className="mt-2 text-slate-500">
+        Your progress and conversation history are automatically saved.
       </p>
 
-      <div className="grid md:grid-cols-2 gap-6 mt-8">
+      <div className="grid gap-6 mt-8 md:grid-cols-2 lg:grid-cols-3">
 
-        {suggestions.map((item) => {
+        {categories.map((item) => {
 
           const Icon = item.icon;
 
           return (
 
             <button
-              key={item.title}
-              onClick={() => onSelect(item.prompt)}
-              className="bg-white rounded-3xl border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 p-6 text-left"
+              key={item.category}
+              onClick={() => onSelect(item.category)}
+              className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
             >
 
               <div
@@ -72,19 +116,22 @@ function WelcomeCards({ onSelect }) {
                 <Icon size={28} />
               </div>
 
-              <h3 className="mt-5 text-xl font-semibold text-gray-800">
+              <h3 className="mt-5 text-xl font-semibold">
                 {item.title}
               </h3>
 
-              <p className="mt-2 text-gray-500">
+              <p className="mt-2 text-slate-500">
                 {item.description}
               </p>
 
             </button>
 
           );
+
         })}
+
       </div>
+
     </div>
   );
 }

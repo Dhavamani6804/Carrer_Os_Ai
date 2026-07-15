@@ -3,13 +3,9 @@ import DashboardLayout from "../../layouts/DashboardLayout";
 import useSettings from "../../hooks/useSettings";
 import SettingsHeader from "../../components/settings/SettingsHeader";
 import SettingsSidebar from "../../components/settings/SettingsSidebar";
-import NotificationSettings from "../../components/settings/sections/NotificationSettings";
 import AccountSettings from "../../components/settings/sections/AccountSettings";
-import CareerSettings from "../../components/settings/sections/CareerSettings";
-import AIPreferences from "../../components/settings/sections/AIPreferences";
 import AppearanceSettings from "../../components/settings/sections/AppearanceSettings";
 import SecuritySettings from "../../components/settings/sections/SecuritySettings";
-import PrivacySettings from "../../components/settings/sections/PrivacySettings";
 import DangerZone from "../../components/settings/sections/DangerZone";
 
 function SettingsPage() {
@@ -37,45 +33,32 @@ function SettingsPage() {
 
   function renderSection() {
     switch (selected) {
-      case "Account":
-        return (
-          <AccountSettings settings={settings} setSettings={setSettings} />
-        );
 
-      case "Career":
-        return <CareerSettings settings={settings} setSettings={setSettings} />;
+  case "Account":
+    return (
+      <AccountSettings
+        settings={settings}
+        setSettings={setSettings}
+      />
+    );
 
-      case "AI":
-        return <AIPreferences settings={settings} setSettings={setSettings} />;
+  case "Appearance":
+    return (
+      <AppearanceSettings
+        settings={settings}
+        setSettings={setSettings}
+      />
+    );
 
-      case "Notifications":
-        return (
-          <NotificationSettings settings={settings} setSettings={setSettings} />
-        );
+  case "Security":
+    return <SecuritySettings />;
 
-      case "Appearance":
-        return (
-          <AppearanceSettings settings={settings} setSettings={setSettings} />
-        );
+  case "Danger":
+    return <DangerZone />;
 
-      case "Security":
-        return <SecuritySettings />;
-
-      case "Privacy":
-        return (
-          <PrivacySettings settings={settings} setSettings={setSettings} />
-        );
-
-      case "Danger":
-        return <DangerZone />;
-
-      default:
-        return (
-          <div className="rounded-3xl bg-white p-10 text-center">
-            Coming Soon
-          </div>
-        );
-    }
+  default:
+    return null;
+}
   }
 
   return (

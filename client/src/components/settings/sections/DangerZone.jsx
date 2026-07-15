@@ -1,152 +1,81 @@
+import { useState } from "react";
 import SettingsCard from "../common/SettingsCard";
-import useAccount from "../../../hooks/useAccount";
+import { deleteAccount } from "../../../services/settingsService";
+import toast from "react-hot-toast";
 
 function DangerZone() {
 
-    function confirmAction(message){
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-        return window.confirm(message);
+  async function handleDelete() {
+
+    if (!window.confirm("Delete your account permanently?"))
+      return;
+
+    try {
+
+      setLoading(true);
+
+      await deleteAccount({
+        password,
+      });
+
+      toast.success("Account deleted.");
+
+      localStorage.clear();
+
+      window.location.href = "/login";
+
+    } catch (e) {
+
+      toast.error("Unable to delete account.");
+
+    } finally {
+
+      setLoading(false);
 
     }
-    const {
+  }
 
-    resetProgress,
+  return (
+    <SettingsCard
+      title="Danger Zone"
+      description="This action cannot be undone."
+    >
 
-    clearCareerHub,
+      <div className="rounded-2xl border border-red-300 bg-red-50 p-6">
 
-    removeAccount
+        <h3 className="font-semibold text-red-700">
+          Delete Account
+        </h3>
 
-} = useAccount();
+        <p className="mt-2 text-sm text-red-600">
+          Enter your password to permanently delete your account.
+        </p>
 
-    return (
+        <input
+          type="password"
+          value={password}
+          onChange={(e) =>
+            setPassword(e.target.value)
+          }
+          placeholder="Password"
+          className="mt-5 w-full rounded-xl border p-3"
+        />
 
-        <SettingsCard
-            title="Danger Zone"
-            description="These actions cannot be undone."
+        <button
+          disabled={loading}
+          onClick={handleDelete}
+          className="mt-5 rounded-xl bg-red-600 px-6 py-3 text-white"
         >
+          {loading ? "Deleting..." : "Delete Account"}
+        </button>
 
-            <div className="space-y-6">
+      </div>
 
-                <div className="rounded-2xl border border-red-200 p-5">
-
-                    <h3 className="font-semibold">
-
-                        Reset Preparation Progress
-
-                    </h3>
-
-                    <p className="mt-2 text-sm text-slate-500">
-
-                        Delete all completed preparation progress.
-
-                    </p>
-
-                    <button
-
-                        onClick={()=>{
-
-                            if(confirmAction(
-                                "Reset all preparation progress?"
-                            )){
-
-                                resetProgress();
-
-                            }
-
-                        }}
-
-                        className="mt-4 rounded-xl bg-red-500 px-5 py-3 text-white"
-
-                    >
-
-                        Reset Progress
-
-                    </button>
-
-                </div>
-
-                <div className="rounded-2xl border border-red-200 p-5">
-
-                    <h3 className="font-semibold">
-
-                        Delete Career Hub
-
-                    </h3>
-
-                    <p className="mt-2 text-sm text-slate-500">
-
-                        Delete every saved application.
-
-                    </p>
-
-                    <button
-
-                        onClick={()=>{
-
-                            if(confirmAction(
-                                "Delete all applications?"
-                            )){
-
-                                clearCareerHub();
-
-                            }
-
-                        }}
-
-                        className="mt-4 rounded-xl bg-red-500 px-5 py-3 text-white"
-
-                    >
-
-                        Delete Applications
-
-                    </button>
-
-                </div>
-
-                <div className="rounded-2xl border border-red-400 bg-red-50 p-5">
-
-                    <h3 className="font-semibold text-red-700">
-
-                        Delete Account
-
-                    </h3>
-
-                    <p className="mt-2 text-red-600">
-
-                        Permanently delete your CareerOS account.
-
-                    </p>
-
-                    <button
-
-                        onClick={()=>{
-
-                            if(confirmAction(
-                                "Delete your account permanently?"
-                            )){
-
-                                removeAccount();
-
-                            }
-
-                        }}
-
-                        className="mt-4 rounded-xl bg-red-700 px-6 py-3 text-white"
-
-                    >
-
-                        Delete Account
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </SettingsCard>
-
-    );
-
+    </SettingsCard>
+  );
 }
 
 export default DangerZone;

@@ -1,91 +1,64 @@
 import SettingsCard from "../common/SettingsCard";
 
-function AccountSettings({
+function AccountSettings({ settings, setSettings }) {
+  return (
+    <SettingsCard
+      title="Account"
+      description="Manage your account information."
+    >
+      <div className="grid gap-6 md:grid-cols-2">
 
-    settings,
+        <div>
+          <label className="font-medium">
+            First Name
+          </label>
 
-    setSettings
+          <input
+            className="mt-2 w-full rounded-xl border p-3"
+            value={settings.firstName || ""}
+            onChange={(e) =>
+              setSettings({
+                ...settings,
+                firstName: e.target.value,
+              })
+            }
+          />
+        </div>
 
-}) {
+        <div>
+          <label className="font-medium">
+            Last Name
+          </label>
 
-    return (
+          <input
+            className="mt-2 w-full rounded-xl border p-3"
+            value={settings.lastName || ""}
+            onChange={(e) =>
+              setSettings({
+                ...settings,
+                lastName: e.target.value,
+              })
+            }
+          />
+        </div>
 
-        <SettingsCard
+        <div className="md:col-span-2">
 
-            title="Account"
+          <label className="font-medium">
+            Email
+          </label>
 
-            description="Manage your account information."
+          <input
+            disabled
+            value={settings.email || ""}
+            className="mt-2 w-full rounded-xl border bg-slate-100 p-3"
+          />
 
-        >
+        </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-
-                <div>
-
-                    <label className="font-medium">
-
-                        Preferred Role
-
-                    </label>
-
-                    <input
-
-                        className="mt-2 w-full rounded-xl border p-3"
-
-                        value={settings.preferredRole}
-
-                        onChange={(e) =>
-
-                            setSettings({
-
-                                ...settings,
-
-                                preferredRole: e.target.value
-
-                            })
-
-                        }
-
-                    />
-
-                </div>
-
-                <div>
-
-                    <label className="font-medium">
-
-                        Preferred Location
-
-                    </label>
-
-                    <input
-
-                        className="mt-2 w-full rounded-xl border p-3"
-
-                        value={settings.preferredLocation}
-
-                        onChange={(e) =>
-
-                            setSettings({
-
-                                ...settings,
-
-                                preferredLocation: e.target.value
-
-                            })
-
-                        }
-
-                    />
-
-                </div>
-
-            </div>
-
-        </SettingsCard>
-
-    );
-
+      </div>
+    </SettingsCard>
+  );
 }
 
 export default AccountSettings;
