@@ -1,53 +1,144 @@
 import DashboardLayout from "../../layouts/DashboardLayout";
-import WelcomeBanner from "./components/WelcomeBanner";
 import DashboardCard from "./components/DashboardCard";
-import QuickActions from "./components/QuickActions";
-import RecentActivity from "./components/RecentActivity";
+import WelcomeBanner from "./components/WelcomeBanner";
+import TodaysFocus from "./components/Today'sFocus";
+
+import Spinner from "../../components/ui/spinner";
+
+import useDashboard from "../../hooks/useDashboard";
 
 function Dashboard() {
+
+    const {
+
+        dashboard,
+
+        loading,
+
+        error
+
+    } = useDashboard();
+
+    if (loading) {
+
+        return (
+
+            <DashboardLayout>
+
+                <div className="flex justify-center items-center h-[70vh]">
+
+                    <Spinner />
+
+                </div>
+
+            </DashboardLayout>
+
+        );
+
+    }
+
+    if (error) {
+
+        return (
+
+            <DashboardLayout>
+
+                <div className="flex justify-center items-center h-[70vh]">
+
+                    <div className="text-center">
+
+                        <h2 className="text-2xl font-bold text-red-600">
+
+                            Failed to load dashboard
+
+                        </h2>
+
+                        <p className="text-slate-500 mt-2">
+
+                            Please refresh the page and try again.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </DashboardLayout>
+
+        );
+
+    }
+
     return (
+
         <DashboardLayout>
 
             <div className="space-y-8">
 
-                <WelcomeBanner />
+                <WelcomeBanner
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    name={dashboard?.name}
 
-                    <DashboardCard
+                />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 gap-6">
+
+                    {/* <DashboardCard
+
                         title="Resume Score"
-                        value="82%"
-                        subtitle="Excellent progress"
-                    />
+
+                        value={`${dashboard?.resumeScore ?? 0}%`}
+
+                        subtitle="Resume ATS Score"
+
+                    /> */}
 
                     <DashboardCard
+
                         title="Applications"
-                        value="12"
-                        subtitle="Jobs applied"
+
+                        value={dashboard?.applications ?? 0}
+
+                        subtitle="Jobs Applied"
+
                     />
 
                     <DashboardCard
+
                         title="Interviews"
-                        value="3"
-                        subtitle="Upcoming"
+
+                        value={dashboard?.interviews ?? 0}
+
+                        subtitle="Interview Stages"
+
                     />
 
-                    <DashboardCard
+                    {/* <DashboardCard
+
                         title="Skills"
-                        value="15"
-                        subtitle="Skills added"
-                    />
+
+                        value={dashboard?.skills ?? 0}
+
+                        subtitle="Skills Added"
+
+                    /> */}
 
                 </div>
 
-                <QuickActions />
+                <TodaysFocus
 
-                <RecentActivity />
+                    currentStreak={dashboard?.currentStreak ?? 0}
+
+                    bestStreak={dashboard?.bestStreak ?? 0}
+
+                />
 
             </div>
 
         </DashboardLayout>
+
     );
+
 }
 
 export default Dashboard;
