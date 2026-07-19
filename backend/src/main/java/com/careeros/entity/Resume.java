@@ -30,4 +30,6 @@ public class Resume {
     private String filePath;
 
     private Instant uploadedAt;
+
+    private int resumeScore;
 }

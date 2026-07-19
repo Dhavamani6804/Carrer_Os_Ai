@@ -16,4 +16,6 @@ public interface GeneralMentorSessionRepository
 
     List<GeneralMentorSession> findByUserId(String userId);
 
+    void deleteAllByUserId(String userId);
+
 }

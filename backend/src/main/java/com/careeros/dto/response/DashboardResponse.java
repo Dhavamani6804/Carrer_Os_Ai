@@ -16,4 +16,14 @@ public class DashboardResponse {
     private int interviews;
 
     private int skills;
+
+    private int totalTasks;
+
+    private int completedTasks;
+
+    private int todayProgress;
+
+    private int currentStreak;
+
+    private int bestStreak;
 }

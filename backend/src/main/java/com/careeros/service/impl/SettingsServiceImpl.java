@@ -3,6 +3,7 @@ package com.careeros.service.impl;
 import com.careeros.dto.request.ChangePasswordRequest;
 import com.careeros.dto.request.UpdateSettingsRequest;
 import com.careeros.dto.response.SettingsResponse;
+import com.careeros.entity.MentorSession;
 import com.careeros.entity.User;
 import com.careeros.exception.BadRequestException;
 import com.careeros.exception.ResourceNotFoundException;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -125,9 +128,18 @@ public class SettingsServiceImpl implements SettingsService {
         /*
          * Delete AI Preparation
          */
-        mentorSessionRepository.deleteAllByUserId(user.getId());
+        List<MentorSession> sessions =
+                mentorSessionRepository.findAllByUserId(user.getId());
 
-        mentorProgressRepository.deleteAllByUserId(user.getId());
+        List<String> sessionIds = sessions.stream()
+                .map(MentorSession::getId)
+                .toList();
+
+        if (!sessionIds.isEmpty()) {
+            mentorProgressRepository.deleteAllBySessionIdIn(sessionIds);
+        }
+
+        mentorSessionRepository.deleteAllByUserId(user.getId());
 
         /*
          * Delete General Mentor

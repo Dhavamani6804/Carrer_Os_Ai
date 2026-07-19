@@ -1,21 +1,17 @@
 package com.careeros.entity;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.Instant;
-import java.util.List;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "users")
 @Data
 @Builder
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
@@ -46,7 +42,8 @@ public class User {
     private String portfolio;
 
     // Skills
-    private List<String> skills;
+    @Builder.Default
+    private List<String> skills = new ArrayList<>();
 
     // Profile Image
     private String profileImage;
@@ -128,4 +125,17 @@ public class User {
 
     @Builder.Default
     private Boolean profileVisible = true;
+
+    /*
+     * Dashboard
+     */
+
+    @Builder.Default
+    private int currentStreak = 0;
+
+    @Builder.Default
+    private int bestStreak = 0;
+
+    private LocalDate lastCompletedDate;
+
 }
