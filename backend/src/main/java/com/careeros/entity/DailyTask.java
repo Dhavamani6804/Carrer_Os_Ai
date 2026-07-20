@@ -37,4 +37,6 @@ public class DailyTask {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    private LocalDate overdueSince;
+
 }

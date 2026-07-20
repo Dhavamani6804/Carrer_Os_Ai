@@ -4,27 +4,24 @@ import taskService from "../services/taskService";
 export default function useDailyTasks() {
 
     const [tasks, setTasks] = useState([]);
+
+    const [todayTasks, setTodayTasks] = useState([]);
+
+    const [overdueTasks, setOverdueTasks] = useState([]);
+
     const [progress, setProgress] = useState(0);
+
     const [completedTasks, setCompletedTasks] = useState(0);
+
     const [totalTasks, setTotalTasks] = useState(0);
 
     const [loading, setLoading] = useState(true);
+
+    const [actionTaskId, setActionTaskId] = useState(null);
+
+    const [actionType, setActionType] = useState(null);
+
     const [error, setError] = useState(null);
-
-    const calculateProgress = (taskList) => {
-
-        const completed = taskList.filter(task => task.completed).length;
-
-        const total = taskList.length;
-
-        setCompletedTasks(completed);
-
-        setTotalTasks(total);
-
-        setProgress(
-            total === 0 ? 0 : Math.round((completed / total) * 100)
-        );
-    };
 
     const fetchTasks = useCallback(async () => {
 
@@ -38,7 +35,19 @@ export default function useDailyTasks() {
 
             setTasks(list);
 
-            calculateProgress(list);
+            setTodayTasks(
+                list.filter(task => !task.overdue)
+            );
+
+            setOverdueTasks(
+                list.filter(task => task.overdue)
+            );
+
+            setProgress(response.progress ?? 0);
+
+            setCompletedTasks(response.completedTasks ?? 0);
+
+            setTotalTasks(response.totalTasks ?? 0);
 
             setError(null);
 
@@ -72,23 +81,77 @@ export default function useDailyTasks() {
 
     const toggleTask = async (taskId) => {
 
-        await taskService.toggleTask(taskId);
+        try {
 
-        await fetchTasks();
+            setActionTaskId(taskId);
+
+            setActionType("toggle");
+
+            await taskService.toggleTask(taskId);
+
+            await fetchTasks();
+
+        } finally {
+
+            setActionTaskId(null);
+
+            setActionType(null);
+
+        }
+
+    };
+
+    const moveTaskToToday = async (taskId) => {
+
+        try {
+
+            setActionTaskId(taskId);
+
+            setActionType("move");
+
+            await taskService.moveTaskToToday(taskId);
+
+            await fetchTasks();
+
+        } finally {
+
+            setActionTaskId(null);
+
+            setActionType(null);
+
+        }
 
     };
 
     const deleteTask = async (taskId) => {
 
-        await taskService.deleteTask(taskId);
+        try {
 
-        await fetchTasks();
+            setActionTaskId(taskId);
+
+            setActionType("delete");
+
+            await taskService.deleteTask(taskId);
+
+            await fetchTasks();
+
+        } finally {
+
+            setActionTaskId(null);
+
+            setActionType(null);
+
+        }
 
     };
 
     return {
 
         tasks,
+
+        todayTasks,
+
+        overdueTasks,
 
         loading,
 
@@ -100,13 +163,22 @@ export default function useDailyTasks() {
 
         totalTasks,
 
+        actionTaskId,
+
+        actionType,
+
         addTask,
 
         toggleTask,
 
+        moveTaskToToday,
+
         deleteTask,
 
+
         refreshTasks: fetchTasks
+
+
 
     };
 

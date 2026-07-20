@@ -11,8 +11,9 @@ public interface DailyTaskService {
 
     TaskResponse toggleTask(String taskId);
 
+    TaskResponse moveTaskToToday(String taskId);
+
     void deleteTask(String taskId);
-
-
+    
 
 }

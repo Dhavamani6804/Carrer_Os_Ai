@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import {
+    Plus,
+    AlertTriangle,
+    CheckCircle2
+} from "lucide-react";
 
 import Card from "../../../components/ui/Card";
 
@@ -19,7 +23,9 @@ function TodaysFocus({
 
     const {
 
-        tasks,
+        todayTasks,
+
+        overdueTasks,
 
         loading,
 
@@ -33,7 +39,13 @@ function TodaysFocus({
 
         toggleTask,
 
-        deleteTask
+        moveTaskToToday,
+
+        deleteTask,
+
+        actionTaskId,
+
+        actionType
 
     } = useDailyTasks();
 
@@ -47,9 +59,11 @@ function TodaysFocus({
 
                 <div className="flex flex-col lg:flex-row gap-8">
 
-                    {/* Left Side */}
+                    {/* LEFT */}
 
                     <div className="flex-1">
+
+                        {/* Header */}
 
                         <div className="flex items-center justify-between">
 
@@ -73,7 +87,7 @@ function TodaysFocus({
 
                                 onClick={() => setOpenModal(true)}
 
-                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition"
 
                             >
 
@@ -135,73 +149,221 @@ function TodaysFocus({
 
                         </div>
 
-                        {/* Tasks */}
+                        {/* Loading Skeleton */}
 
-                        <div className="mt-8 space-y-3">
+                        {
 
-                            {
+                            loading && (
 
-                                loading ?
+                                <div className="space-y-3 py-8">
 
-                                    (
+                                    {
 
-                                        <div className="text-center py-10 text-gray-500">
+                                        [...Array(4)].map((_, index) => (
 
-                                            Loading tasks...
+                                            <div
 
-                                        </div>
+                                                key={index}
 
-                                    )
-
-                                    :
-
-                                    tasks.length === 0 ?
-
-                                        (
-
-                                            <div className="border-2 border-dashed rounded-xl py-10 text-center">
-
-                                                <h3 className="font-semibold">
-
-                                                    No Tasks Today
-
-                                                </h3>
-
-                                                <p className="text-gray-500 mt-2">
-
-                                                    Add your first task to begin your streak.
-
-                                                </p>
-
-                                            </div>
-
-                                        )
-
-                                        :
-
-                                        tasks.map(task => (
-
-                                            <TaskItem
-
-                                                key={task.id}
-
-                                                task={task}
-
-                                                onToggle={toggleTask}
-
-                                                onDelete={deleteTask}
+                                                className="h-16 rounded-xl bg-slate-200 animate-pulse"
 
                                             />
 
                                         ))
 
-                            }
+                                    }
 
-                        </div>
+                                </div>
+
+                            )
+
+                        }
+
+                        {/* Overdue Tasks */}
+
+                        {
+
+                            !loading && overdueTasks.length > 0 && (
+
+                                <div className="mt-8">
+
+                                    <div className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-4">
+
+                                        <p className="font-semibold text-amber-700">
+
+                                            ⚠ Attention Required
+
+                                        </p>
+
+                                        <p className="text-sm text-amber-700 mt-1">
+
+                                            These tasks were not completed yesterday.
+
+                                            Move them to today's list or delete them.
+
+                                        </p>
+
+                                    </div>
+
+                                    <div className="flex items-center gap-2 mb-4">
+
+                                        <AlertTriangle
+
+                                            className="text-amber-500"
+
+                                            size={22}
+
+                                        />
+
+                                        <h3 className="text-xl font-semibold">
+
+                                            Overdue Tasks
+
+                                        </h3>
+
+                                    </div>
+
+                                    <div className="space-y-3">
+
+                                        {
+
+                                            overdueTasks.map(task => (
+
+                                                <TaskItem
+
+                                                    key={task.id}
+
+                                                    task={task}
+
+                                                    onMove={moveTaskToToday}
+
+                                                    onDelete={deleteTask}
+
+                                                    actionTaskId={actionTaskId}
+
+                                                    actionType={actionType}
+
+                                                />
+
+                                            ))
+
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            )
+
+                        }
+
+                        {/* Today's Tasks */}
+
+                        {
+
+                            !loading && (
+
+                                <div className="mt-8">
+
+                                    <div className="flex items-center gap-2 mb-4">
+
+                                        <CheckCircle2
+
+                                            className="text-blue-600"
+
+                                            size={22}
+
+                                        />
+
+                                        <h3 className="text-xl font-semibold">
+
+                                            Today's Tasks
+
+                                        </h3>
+
+                                    </div>
+
+                                    {
+
+                                        todayTasks.length === 0 ? (
+
+                                            <div className="border-2 border-dashed rounded-xl py-12 text-center">
+
+                                                <div className="text-5xl">
+
+                                                    🎯
+
+                                                </div>
+
+                                                <h3 className="font-bold text-lg mt-4">
+
+                                                    Ready for a productive day?
+
+                                                </h3>
+
+                                                <p className="text-gray-500 mt-2">
+
+                                                    Add your first task and start building your streak.
+
+                                                </p>
+
+                                                <button
+
+                                                    onClick={() => setOpenModal(true)}
+
+                                                    className="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg transition"
+
+                                                >
+
+                                                    Add Your First Task
+
+                                                </button>
+
+                                            </div>
+
+                                        ) : (
+
+                                            <div className="space-y-3">
+
+                                                {
+
+                                                    todayTasks.map(task => (
+
+                                                        <TaskItem
+
+                                                            key={task.id}
+
+                                                            task={task}
+
+                                                            onToggle={toggleTask}
+
+                                                            onDelete={deleteTask}
+
+                                                            actionTaskId={actionTaskId}
+
+                                                            actionType={actionType}
+
+                                                        />
+
+                                                    ))
+
+                                                }
+
+                                            </div>
+
+                                        )
+
+                                    }
+
+                                </div>
+
+                            )
+
+                        }
 
                     </div>
 
-                    {/* Right Side */}
+                    {/* RIGHT */}
 
                     <div className="lg:w-80">
 

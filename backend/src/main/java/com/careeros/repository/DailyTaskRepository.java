@@ -13,4 +13,13 @@ public interface DailyTaskRepository extends MongoRepository<DailyTask, String> 
             LocalDate taskDate
     );
 
+    List<DailyTask> findByUserIdAndCompletedFalseAndTaskDate(
+            String userId,
+            LocalDate taskDate
+    );
+
+    List<DailyTask> findByUserIdAndTaskDateBeforeOrderByTaskDateAscCreatedAtAsc(
+            String userId,
+            LocalDate taskDate
+    );
 }

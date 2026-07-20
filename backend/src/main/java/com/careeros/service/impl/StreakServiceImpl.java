@@ -16,11 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StreakServiceImpl implements StreakService {
 
-    private final CurrentUserService currentUserService;
-
-    private final DailyTaskRepository dailyTaskRepository;
-
     private final UserRepository userRepository;
+    private final DailyTaskRepository taskRepository;
+    private final CurrentUserService currentUserService;
 
     @Override
     public void updateStreak() {
@@ -30,21 +28,16 @@ public class StreakServiceImpl implements StreakService {
         LocalDate today = LocalDate.now();
 
         List<DailyTask> todayTasks =
-                dailyTaskRepository.findByUserIdAndTaskDateOrderByCreatedAtAsc(
+                taskRepository.findByUserIdAndTaskDateOrderByCreatedAtAsc(
                         user.getId(),
                         today
                 );
 
-        /*
-         * No tasks today
-         */
+        // No tasks -> nothing to update
         if (todayTasks.isEmpty()) {
             return;
         }
 
-        /*
-         * Not all tasks completed
-         */
         boolean allCompleted = todayTasks.stream()
                 .allMatch(DailyTask::isCompleted);
 
@@ -52,45 +45,24 @@ public class StreakServiceImpl implements StreakService {
             return;
         }
 
-        /*
-         * Already counted today
-         */
+        // Already updated today
         if (today.equals(user.getLastCompletedDate())) {
             return;
         }
 
-        /*
-         * Continue streak
-         */
         if (today.minusDays(1).equals(user.getLastCompletedDate())) {
-
-            user.setCurrentStreak(
-                    user.getCurrentStreak() + 1
-            );
-
+            user.setCurrentStreak(user.getCurrentStreak() + 1);
         } else {
-
-            /*
-             * Start new streak
-             */
             user.setCurrentStreak(1);
-
         }
 
-        /*
-         * Update best streak
-         */
-        user.setBestStreak(
-                Math.max(
-                        user.getBestStreak(),
-                        user.getCurrentStreak()
-                )
-        );
+        if (user.getCurrentStreak() > user.getBestStreak()) {
+            user.setBestStreak(user.getCurrentStreak());
+        }
 
         user.setLastCompletedDate(today);
 
         userRepository.save(user);
-
     }
 
     @Override
@@ -100,22 +72,48 @@ public class StreakServiceImpl implements StreakService {
 
         LocalDate today = LocalDate.now();
 
-        if (user.getLastCompletedDate() == null) {
+        cleanupExpiredOverdue(user.getId(), today);
+
+        LocalDate yesterday = today.minusDays(1);
+
+        List<DailyTask> yesterdayTasks =
+                taskRepository.findByUserIdAndTaskDateOrderByCreatedAtAsc(
+                        user.getId(),
+                        yesterday
+                );
+
+        if (yesterdayTasks.isEmpty()) {
             return;
         }
 
-        if (user.getCurrentStreak() == 0) {
-            return;
-        }
+        boolean allCompleted = yesterdayTasks.stream()
+                .allMatch(DailyTask::isCompleted);
 
-        if (user.getLastCompletedDate().isBefore(today.minusDays(1))) {
+        if (!allCompleted) {
 
             user.setCurrentStreak(0);
 
             userRepository.save(user);
-
         }
-
     }
 
+    private void cleanupExpiredOverdue(String userId,
+                                       LocalDate today) {
+
+        List<DailyTask> oldTasks =
+                taskRepository.findByUserIdAndTaskDateBeforeOrderByTaskDateAscCreatedAtAsc(
+                        userId,
+                        today.minusDays(1)
+                );
+
+        List<DailyTask> deleteTasks = oldTasks.stream()
+                .filter(task -> !task.isCompleted())
+                .toList();
+
+        if (!deleteTasks.isEmpty()) {
+
+            taskRepository.deleteAll(deleteTasks);
+
+        }
+    }
 }

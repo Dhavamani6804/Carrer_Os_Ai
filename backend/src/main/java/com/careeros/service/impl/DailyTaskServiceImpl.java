@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,20 +57,49 @@ public class DailyTaskServiceImpl implements DailyTaskService {
 
         User user = currentUserService.getCurrentUser();
 
-        List<DailyTask> tasks = repository
-                .findByUserIdAndTaskDateOrderByCreatedAtAsc(
+        streakService.refreshStreak();
+
+        LocalDate today = LocalDate.now();
+
+        List<TaskResponse> responses = new ArrayList<>();
+
+        // Yesterday incomplete tasks
+        List<DailyTask> overdueTasks =
+                repository.findByUserIdAndCompletedFalseAndTaskDate(
                         user.getId(),
-                        LocalDate.now()
+                        today.minusDays(1)
                 );
 
-        List<TaskResponse> responses = tasks
-                .stream()
-                .map(this::map)
-                .toList();
+        overdueTasks.forEach(task -> {
 
-        int total = tasks.size();
+            TaskResponse dto = map(task);
 
-        int completed = (int) tasks.stream()
+            dto.setOverdue(true);
+
+            responses.add(dto);
+
+        });
+
+        // Today's tasks
+        List<DailyTask> todayTasks =
+                repository.findByUserIdAndTaskDateOrderByCreatedAtAsc(
+                        user.getId(),
+                        today
+                );
+
+        todayTasks.forEach(task -> {
+
+            TaskResponse dto = map(task);
+
+            dto.setOverdue(false);
+
+            responses.add(dto);
+
+        });
+
+        int total = todayTasks.size();
+
+        int completed = (int) todayTasks.stream()
                 .filter(DailyTask::isCompleted)
                 .count();
 
@@ -88,7 +118,34 @@ public class DailyTaskServiceImpl implements DailyTaskService {
                 .progress(progress)
 
                 .build();
+    }
 
+    @Override
+    public TaskResponse moveTaskToToday(String taskId) {
+
+        User user = currentUserService.getCurrentUser();
+
+        DailyTask task = repository.findById(taskId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Task not found."));
+
+        if (!task.getUserId().equals(user.getId())) {
+
+            throw new ResourceNotFoundException("Task not found.");
+
+        }
+
+        task.setTaskDate(LocalDate.now());
+
+        task.setUpdatedAt(LocalDateTime.now());
+
+        repository.save(task);
+
+        TaskResponse response = map(task);
+
+        response.setOverdue(false);
+
+        return response;
     }
 
     @Override
@@ -112,7 +169,7 @@ public class DailyTaskServiceImpl implements DailyTaskService {
         task.setUpdatedAt(LocalDateTime.now());
 
         repository.save(task);
-        
+
         streakService.updateStreak();
 
         return map(task);
@@ -148,6 +205,10 @@ public class DailyTaskServiceImpl implements DailyTaskService {
                 .title(task.getTitle())
 
                 .completed(task.isCompleted())
+
+                .taskDate(task.getTaskDate())
+
+                .overdue(false)
 
                 .build();
 

@@ -21,7 +21,6 @@ public class DailyTaskController {
     /*
      * Create Task
      */
-
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(
 
@@ -43,7 +42,6 @@ public class DailyTaskController {
     /*
      * Get Today's Tasks
      */
-
     @GetMapping("/today")
     public ResponseEntity<TodayTaskResponse> getTodayTasks() {
 
@@ -56,7 +54,6 @@ public class DailyTaskController {
     /*
      * Toggle Task
      */
-
     @PatchMapping("/{taskId}/toggle")
     public ResponseEntity<TaskResponse> toggleTask(
 
@@ -72,9 +69,25 @@ public class DailyTaskController {
     }
 
     /*
+     * Move Overdue Task To Today
+     */
+    @PatchMapping("/{taskId}/move-to-today")
+    public ResponseEntity<TaskResponse> moveTaskToToday(
+
+            @PathVariable
+            String taskId
+
+    ) {
+
+        return ResponseEntity.ok(
+                dailyTaskService.moveTaskToToday(taskId)
+        );
+
+    }
+
+    /*
      * Delete Task
      */
-
     @DeleteMapping("/{taskId}")
     public ResponseEntity<ApiResponse> deleteTask(
 
