@@ -117,7 +117,7 @@ public class User {
      */
 
     @Builder.Default
-    private String theme = "SYSTEM";
+    private String theme = "LIGHT";
 
     /*
      * Privacy

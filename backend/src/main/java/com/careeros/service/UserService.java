@@ -30,6 +30,7 @@ public class UserService {
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .theme("LIGHT")
                 .build();
 
         userRepository.save(user);

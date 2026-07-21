@@ -56,7 +56,11 @@ public class SettingsServiceImpl implements SettingsService {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .theme(user.getTheme())
+                .theme(
+                        user.getTheme() == null
+                                ? "LIGHT"
+                                : user.getTheme()
+                )
                 .build();
     }
 
