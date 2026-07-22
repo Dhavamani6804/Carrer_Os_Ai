@@ -106,4 +106,41 @@ Guidelines:
 - Keep answers concise but complete.
 """;
     }
+
+    public String generateContent(String prompt) {
+
+        try {
+
+            GenerateContentConfig config =
+                    GenerateContentConfig.builder()
+                            .temperature(temperature)
+                            .maxOutputTokens(maxOutputTokens)
+                            .build();
+
+            GenerateContentResponse response =
+                    client.models.generateContent(
+                            model,
+                            prompt,
+                            config
+                    );
+
+            if (response == null || response.text() == null) {
+                return "Unable to generate document.";
+            }
+
+            return response.text();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            log.error("Gemini Error", e); 
+
+            throw new AIServiceException(
+                    "AI service unavailable.",
+                    e
+            );
+
+        }
+    }
+
 }

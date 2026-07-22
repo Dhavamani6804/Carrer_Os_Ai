@@ -2,7 +2,6 @@ package com.careeros.dto.response;
 
 import lombok.*;
 
-import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
