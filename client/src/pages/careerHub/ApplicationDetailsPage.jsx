@@ -18,6 +18,8 @@ import StatusSection from "../../components/careerHub/application/StatusSection"
 import InfoChip from "../../components/careerHub/common/InfoChip";
 import TailoredResumeModal from "../../components/careerHub/resume/TailoredResumeModal";
 import useResumeTailor from "../../hooks/useResumeTailor";
+import useAIDocument from "../../hooks/useAIDocument";
+import GeneratedDocumentModal from "../../components/careerHub/ai/GeneratedDocumentModal";
 
 function ApplicationDetailsPage() {
   const { applicationId } = useParams();
@@ -25,6 +27,7 @@ function ApplicationDetailsPage() {
 
   const [application, setApplication] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingType, setLoadingType] = useState(null);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -32,15 +35,20 @@ function ApplicationDetailsPage() {
 
   const {
     loading: tailoring,
-
     resume,
-
-    open,
-
-    setOpen,
-
-    generate,
+    open: resumeOpen,
+    setOpen: setResumeOpen,
+    generate: generateResume,
   } = useResumeTailor();
+
+  const {
+    loadingType: documentLoadingType,
+    open: documentOpen,
+    title,
+    content,
+    generate: generateDocument,
+    closeModal,
+  } = useAIDocument();
 
   useEffect(() => {
     loadApplication();
@@ -181,11 +189,29 @@ function ApplicationDetailsPage() {
           </button>
 
           <button
-            onClick={() => generate(application.id)}
+            onClick={() => generateResume(application.id)}
             disabled={tailoring}
             className="rounded-xl bg-emerald-600 px-5 py-3 text-white hover:bg-emerald-700 disabled:opacity-50"
           >
             {tailoring ? "Tailoring..." : "✨ Tailor Resume"}
+          </button>
+          <button
+            onClick={() => generateDocument(application.id, "COVER_LETTER")}
+            disabled={documentLoadingType !== null}
+            className="rounded-xl bg-blue-600 px-5 py-3 text-white hover:bg-blue-700 disabled:opacity-50"
+          >
+            {documentLoadingType === "COVER_LETTER"
+              ? "Generating..."
+              : "📝 Generate Cover Letter"}
+          </button>
+          <button
+            onClick={() => generateDocument(application.id, "HR_EMAIL")}
+            disabled={documentLoadingType !== null}
+            className="rounded-xl bg-purple-600 px-5 py-3 text-white hover:bg-purple-700 disabled:opacity-50"
+          >
+            {documentLoadingType === "HR_EMAIL"
+              ? "Generating..."
+              : "✉️ Generate HR Email"}
           </button>
         </div>
 
@@ -209,9 +235,15 @@ function ApplicationDetailsPage() {
         onSubmit={handleSaveEvent}
       />
       <TailoredResumeModal
-        open={open}
-        onClose={() => setOpen(false)}
+        open={resumeOpen}
+        onClose={() => setResumeOpen(false)}
         resume={resume}
+      />
+      <GeneratedDocumentModal
+        open={documentOpen}
+        title={title}
+        content={content}
+        onClose={closeModal}
       />
     </DashboardLayout>
   );

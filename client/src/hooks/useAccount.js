@@ -1,6 +1,5 @@
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
 import {
   deleteAccount,
   deleteCareerHub,
